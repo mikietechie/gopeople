@@ -22,8 +22,6 @@ Document [srs.pdf](./files/srs.pdf)
 6. ![Image 5](./files/5.png)
 7. ![Image 6](./files/6.png)
 
-![image](files/Users/jzhang/Desktop/Isolated.png)
-
 ## Technologies used
 
 1. Golang
