@@ -10,7 +10,19 @@ To run in a secure manner, you might want to create an environment variables fil
 
 ## Requirements Specification
 
-Document [srs.pdf](./srs.pdf)
+Document [srs.pdf](./files/srs.pdf)
+
+## Output
+
+1. Swagger [Swagger Documentation](./src/docs/swagger.json)
+2. ![Image 1](./files/1.png)
+3. ![Image 2](./files/2.png)
+4. ![Image 3](./files/3.png)
+5. ![Image 4](./files/4.png)
+6. ![Image 5](./files/5.png)
+7. ![Image 6](./files/6.png)
+
+![image](files/Users/jzhang/Desktop/Isolated.png)
 
 ## Technologies used
 
@@ -25,4 +37,5 @@ Document [srs.pdf](./srs.pdf)
 
 ## TODO
 
-1. Add security
+1. Add authentication and authorization
+2. Add more tests

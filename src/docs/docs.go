@@ -33,7 +33,19 @@ const docTemplate = `{
                 "summary": "Read Users",
                 "parameters": [
                     {
-                        "type": "string",
+                        "type": "integer",
+                        "description": "paginate with limit e.g 10",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "paginate with offset e.g 5",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
                         "description": "search by id",
                         "name": "id",
                         "in": "query"

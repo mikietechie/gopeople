@@ -26,19 +26,7 @@
                 "summary": "Read Users",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "paginate with limit e.g 10",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "paginate with offset e.g 5",
-                        "name": "offset",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
+                        "type": "string",
                         "description": "search by id",
                         "name": "id",
                         "in": "query"

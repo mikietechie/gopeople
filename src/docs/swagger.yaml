@@ -71,10 +71,18 @@ paths:
       - application/json
       description: Read Users
       parameters:
+      - description: paginate with limit e.g 10
+        in: query
+        name: limit
+        type: integer
+      - description: paginate with offset e.g 5
+        in: query
+        name: offset
+        type: integer
       - description: search by id
         in: query
         name: id
-        type: string
+        type: integer
       - description: search by name
         in: query
         name: name

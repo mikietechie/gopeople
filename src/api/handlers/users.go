@@ -12,7 +12,9 @@ import (
 // @Tags			 	users
 // @Accept				json
 // @Produce				json
-// @Param				id			query     string  false  "search by id"
+// @Param				limit		query     int  false  "paginate with limit e.g 10"
+// @Param				offset		query     int  false  "paginate with offset e.g 5"
+// @Param				id			query     int  false  "search by id"
 // @Param				name		query     string  false  "search by name"
 // @Param				surname		query     string  false  "search by surname"
 // @Param				patronymic	query     string  false  "search by patronymic"
