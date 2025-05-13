@@ -2,6 +2,23 @@
 
 A Junior Golang Developer interview assignment
 
+This project is a RESTful API service written in Golang using Go Fiber and GORM, designed to fetch, enrich, and store personal data. It retrieves a person's name via API, enriches it with probable age (Agify), gender (Genderize), and nationality (Nationalize), then stores the data in PostgreSQL.
+
+Features:
+✅ REST Endpoints for CRUD operations with filtering, pagination, and JSON support
+✅ Data Enrichment via external APIs (Agify, Genderize, Nationalize)
+✅ PostgreSQL Integration with automated migrations
+✅ Swagger Documentation for API endpoints
+✅ Environment Configuration using .env
+✅ Logging (debug & info levels)
+✅ Dockerized for easy deployment
+
+Built with Go, Docker, Linux, Git, and PostgreSQL, this project demonstrates clean architecture and best practices for a junior Golang developer role.
+
+🔹 Tech Stack: Go, Fiber, GORM, PostgreSQL, Docker, Swagger, Agify/Genderize/Nationalize APIs.
+
+Deploy with docker-compose up and explore the API via Swagger UI! 🚀
+
 ## Getting started
 
 `docker compose -f "docker-compose.yml" up -d --build`
