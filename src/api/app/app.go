@@ -11,6 +11,7 @@ import (
 	"github.com/gofiber/swagger"
 	"github.com/mikietechie/gopeople/api/handlers"
 	"github.com/mikietechie/gopeople/api/middleware"
+	"github.com/mikietechie/gopeople/config"
 	"github.com/mikietechie/gopeople/docs"
 )
 
@@ -34,7 +35,9 @@ func New() *fiber.App {
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "*",
 	}))
-	app.Use(logger.New())
+	app.Use(logger.New(logger.Config{
+		Output: config.LOGGING_WRITER,
+	}))
 	app.Use(recover.New())
 	app.Use(helmet.New())
 	app.Get("/docs/*", swagger.HandlerDefault)
@@ -46,7 +49,8 @@ func New() *fiber.App {
 		router.Get("/users", handlers.ReadUsers)
 		router.Post("/users", handlers.CreateUser)
 		router.Get("/users/:id", handlers.ReadUser)
-		router.Patch("/users/:id", handlers.UpdateUser)
+		router.Put("/users/:id", handlers.UpdateUser)
+		router.Patch("/users/:id", handlers.EditUser)
 		router.Delete("/users/:id", handlers.DeleteUser)
 	})
 	// return app

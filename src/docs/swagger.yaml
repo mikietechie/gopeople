@@ -11,29 +11,67 @@ definitions:
   models.User:
     properties:
       age:
+        description: Single-field index
         type: integer
       createdAt:
         type: string
       deletedAt:
         $ref: '#/definitions/gorm.DeletedAt'
       gender:
-        type: string
+        allOf:
+        - $ref: '#/definitions/tp.Gender'
+        description: Single-field index
       id:
         type: integer
       name:
+        description: Single-field index
         type: string
       nationality:
+        description: Single-field index
+        type: string
+      patronymic:
+        description: No index (rarely filtered)
+        type: string
+      surname:
+        description: Single-field index
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  tp.CreateUserReqBody:
+    properties:
+      name:
         type: string
       patronymic:
         type: string
       surname:
         type: string
-      updatedAt:
-        type: string
     type: object
-  tp.CreateUpdateUserReqBody:
+  tp.EditReqBody:
     properties:
+      field:
+        type: string
+      value: {}
+    type: object
+  tp.Gender:
+    enum:
+    - male
+    - female
+    - other
+    type: string
+    x-enum-varnames:
+    - Male
+    - Female
+    - Other
+  tp.UpdateUserReqBody:
+    properties:
+      age:
+        type: integer
+      gender:
+        $ref: '#/definitions/tp.Gender'
       name:
+        type: string
+      nationality:
         type: string
       patronymic:
         type: string
@@ -45,7 +83,7 @@ definitions:
       age:
         type: integer
       gender:
-        type: string
+        $ref: '#/definitions/tp.Gender'
       id:
         type: integer
       name:
@@ -120,6 +158,10 @@ paths:
           description: Bad Request
           schema:
             type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
       summary: Read Users
       tags:
       - users
@@ -133,7 +175,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/tp.CreateUpdateUserReqBody'
+          $ref: '#/definitions/tp.CreateUserReqBody'
       produces:
       - application/json
       responses:
@@ -143,6 +185,10 @@ paths:
             type: integer
         "400":
           description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
           schema:
             type: string
       summary: Create User
@@ -170,6 +216,10 @@ paths:
             type: string
         "404":
           description: Not Found
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
       summary: Delete User
       tags:
       - users
@@ -202,7 +252,7 @@ paths:
     patch:
       consumes:
       - application/json
-      description: Update User
+      description: Edit User
       parameters:
       - description: User ID
         in: path
@@ -214,7 +264,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/tp.CreateUpdateUserReqBody'
+          $ref: '#/definitions/tp.EditReqBody'
       produces:
       - application/json
       responses:
@@ -228,6 +278,46 @@ paths:
             type: string
         "404":
           description: Not Found
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Edit User
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update User
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/tp.UpdateUserReqBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
       summary: Update User
       tags:
       - users

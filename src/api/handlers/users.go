@@ -23,16 +23,20 @@ import (
 // @Param				nationality	query     string  false  "search by nationality"
 // @Success				200 {object}	[]tp.UserItem
 // @Success				400 {object}	string
+// @Success				500 {object}	string
 // @Router 				/users		[get]
 func ReadUsers(c *fiber.Ctx) error {
 	var pagination tp.Pagination
 	var query tp.ReadUsersReqQuery
-	c.QueryParser(&query)
+	err := c.QueryParser(&query)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+	}
 	pagination.Limit = c.QueryInt("limit", 10)
 	pagination.Offset = c.QueryInt("offset", 0)
 	data, err := services.ReadUsers(query, pagination)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 	}
 	return c.Status(fiber.StatusOK).JSON(data)
 }
@@ -43,19 +47,20 @@ func ReadUsers(c *fiber.Ctx) error {
 // @Tags			users
 // @Accept			json
 // @Produce			json
-// @Param			body		body tp.CreateUpdateUserReqBody true "body"
+// @Param			body		body tp.CreateUserReqBody true "body"
 // @Success			200			{object} int
-// @Failure			400			{object} string
+// @Success			400 {object}	string
+// @Success			500 {object}	string
 // @Router			/users		[post]
 func CreateUser(c *fiber.Ctx) error {
-	var body tp.CreateUpdateUserReqBody
+	var body tp.CreateUserReqBody
 	err := c.BodyParser(&body)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 	id, err := services.CreateUser(body)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 	}
 	return c.Status(fiber.StatusCreated).JSON(id)
 }
@@ -74,7 +79,7 @@ func CreateUser(c *fiber.Ctx) error {
 func ReadUser(c *fiber.Ctx) error {
 	id, err := c.ParamsInt("id", 0)
 	if err != nil {
-		return c.SendStatus(404)
+		return c.SendStatus(fiber.StatusNotFound)
 	}
 	user, err := services.GetUserByID(id)
 	if err != nil {
@@ -90,16 +95,17 @@ func ReadUser(c *fiber.Ctx) error {
 // @Accept			json
 // @Produce			json
 // @Param			id   path      int  true  "User ID"
-// @Param			body body tp.CreateUpdateUserReqBody true "User data"
+// @Param			body body tp.UpdateUserReqBody true "User data"
 // @Success			200 {object} int
 // @Failure			400 {object} string
 // @Failure			404
-// @Router			/users/{id} [patch]
+// @Success			500 {object}	string
+// @Router			/users/{id} [put]
 func UpdateUser(c *fiber.Ctx) error {
-	var body tp.CreateUpdateUserReqBody
+	var body tp.UpdateUserReqBody
 	id, err := c.ParamsInt("id", 0)
 	if err != nil {
-		return c.SendStatus(404)
+		return c.SendStatus(fiber.StatusNotFound)
 	}
 	err = c.BodyParser(&body)
 	if err != nil {
@@ -107,7 +113,37 @@ func UpdateUser(c *fiber.Ctx) error {
 	}
 	err = services.UpdateUser(id, body)
 	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+	}
+	return c.Status(fiber.StatusAccepted).JSON(id)
+}
+
+// Edit User godoc
+// @Summary			Edit User
+// @Description		Edit User
+// @Tags			users
+// @Accept			json
+// @Produce			json
+// @Param			id   path      int  true  "User ID"
+// @Param			body body tp.EditReqBody true "User data"
+// @Success			200 {object} int
+// @Failure			400 {object} string
+// @Failure			404
+// @Success			500 {object}	string
+// @Router			/users/{id} [patch]
+func EditUser(c *fiber.Ctx) error {
+	var body tp.EditReqBody
+	id, err := c.ParamsInt("id", 0)
+	if err != nil {
+		return c.SendStatus(fiber.StatusNotFound)
+	}
+	err = c.BodyParser(&body)
+	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+	}
+	err = services.EditUser(id, body)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 	}
 	return c.Status(fiber.StatusAccepted).JSON(id)
 }
@@ -122,15 +158,16 @@ func UpdateUser(c *fiber.Ctx) error {
 // @Success			200
 // @Failure			400 {object} string
 // @Failure			404
+// @Success			500 {object}	string
 // @Router			/users/{id} [delete]
 func DeleteUser(c *fiber.Ctx) error {
 	id, err := c.ParamsInt("id", 0)
 	if err != nil {
-		return c.SendStatus(404)
+		return c.SendStatus(fiber.StatusNotFound)
 	}
 	err = services.DeleteUser(id)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 	}
 	return c.SendStatus(fiber.StatusNoContent)
 }

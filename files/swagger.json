@@ -105,7 +105,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/tp.CreateUpdateUserReqBody"
+                            "$ref": "#/definitions/tp.CreateUserReqBody"
                         }
                     }
                 ],
@@ -227,7 +227,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/tp.CreateUpdateUserReqBody"
+                            "$ref": "#/definitions/tp.CreateUserReqBody"
                         }
                     }
                 ],
@@ -299,7 +299,7 @@
                 }
             }
         },
-        "tp.CreateUpdateUserReqBody": {
+        "tp.CreateUserReqBody": {
             "type": "object",
             "properties": {
                 "name": {

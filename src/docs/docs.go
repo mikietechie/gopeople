@@ -102,6 +102,12 @@ const docTemplate = `{
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -124,7 +130,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/tp.CreateUpdateUserReqBody"
+                            "$ref": "#/definitions/tp.CreateUserReqBody"
                         }
                     }
                 ],
@@ -137,6 +143,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "string"
                         }
@@ -184,6 +196,60 @@ const docTemplate = `{
                     }
                 }
             },
+            "put": {
+                "description": "Update User",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update User",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "User data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/tp.UpdateUserReqBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "Delete User",
                 "consumes": [
@@ -217,11 +283,17 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             },
             "patch": {
-                "description": "Update User",
+                "description": "Edit User",
                 "consumes": [
                     "application/json"
                 ],
@@ -231,7 +303,7 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "Update User",
+                "summary": "Edit User",
                 "parameters": [
                     {
                         "type": "integer",
@@ -246,7 +318,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/tp.CreateUpdateUserReqBody"
+                            "$ref": "#/definitions/tp.EditReqBody"
                         }
                     }
                 ],
@@ -265,6 +337,12 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }
@@ -287,6 +365,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "age": {
+                    "description": "Single-field index",
                     "type": "integer"
                 },
                 "createdAt": {
@@ -296,21 +375,30 @@ const docTemplate = `{
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
                 "gender": {
-                    "type": "string"
+                    "description": "Single-field index",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/tp.Gender"
+                        }
+                    ]
                 },
                 "id": {
                     "type": "integer"
                 },
                 "name": {
+                    "description": "Single-field index",
                     "type": "string"
                 },
                 "nationality": {
+                    "description": "Single-field index",
                     "type": "string"
                 },
                 "patronymic": {
+                    "description": "No index (rarely filtered)",
                     "type": "string"
                 },
                 "surname": {
+                    "description": "Single-field index",
                     "type": "string"
                 },
                 "updatedAt": {
@@ -318,10 +406,55 @@ const docTemplate = `{
                 }
             }
         },
-        "tp.CreateUpdateUserReqBody": {
+        "tp.CreateUserReqBody": {
             "type": "object",
             "properties": {
                 "name": {
+                    "type": "string"
+                },
+                "patronymic": {
+                    "type": "string"
+                },
+                "surname": {
+                    "type": "string"
+                }
+            }
+        },
+        "tp.EditReqBody": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "type": "string"
+                },
+                "value": {}
+            }
+        },
+        "tp.Gender": {
+            "type": "string",
+            "enum": [
+                "male",
+                "female",
+                "other"
+            ],
+            "x-enum-varnames": [
+                "Male",
+                "Female",
+                "Other"
+            ]
+        },
+        "tp.UpdateUserReqBody": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer"
+                },
+                "gender": {
+                    "$ref": "#/definitions/tp.Gender"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "nationality": {
                     "type": "string"
                 },
                 "patronymic": {
@@ -339,7 +472,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "gender": {
-                    "type": "string"
+                    "$ref": "#/definitions/tp.Gender"
                 },
                 "id": {
                     "type": "integer"

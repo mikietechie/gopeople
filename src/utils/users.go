@@ -7,6 +7,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
+	"github.com/mikietechie/gopeople/config"
 	"github.com/mikietechie/gopeople/tp"
 	"gorm.io/gorm/clause"
 )
@@ -33,7 +34,7 @@ func ParseReadUsersQuery(query tp.ReadUsersReqQuery) ([]clause.Expression, error
 }
 
 func GetAgeByName(name string) (int, error) {
-	agent := fiber.Get(fmt.Sprintf(`https://api.agify.io/?name=%s`, name))
+	agent := fiber.Get(fmt.Sprintf(config.AGE_API_URL, name))
 	_, body, errs := agent.Bytes()
 	if len(errs) > 0 {
 		for _, err := range errs {
@@ -52,7 +53,7 @@ func GetAgeByName(name string) (int, error) {
 }
 
 func GetNationalityByName(name string) (string, error) {
-	agent := fiber.Get(fmt.Sprintf(`https://api.nationalize.io/?name=%s`, name))
+	agent := fiber.Get(fmt.Sprintf(config.NATION_API_URL, name))
 	_, body, errs := agent.Bytes()
 	if len(errs) > 0 {
 		for _, err := range errs {
@@ -75,8 +76,8 @@ func GetNationalityByName(name string) (string, error) {
 	return data.Country[0].CountryId, nil
 }
 
-func GetGenderByName(name string) (string, error) {
-	agent := fiber.Get(fmt.Sprintf(`https://api.genderize.io/?name=%s`, name))
+func GetGenderByName(name string) (tp.Gender, error) {
+	agent := fiber.Get(fmt.Sprintf(config.GENDER_API_URL, name))
 	_, body, errs := agent.Bytes()
 	if len(errs) > 0 {
 		for _, err := range errs {
@@ -91,5 +92,11 @@ func GetGenderByName(name string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return data.Gender, nil
+	gender := tp.Other
+	if data.Gender == "male" {
+		gender = tp.Male
+	} else if data.Gender == "female" {
+		gender = tp.Female
+	}
+	return gender, nil
 }
